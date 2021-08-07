@@ -30,7 +30,7 @@
         <li class="nav-item text-secondary font-weight-bold" role="presentation">
           <button class="nav-link active" id="todasPostagens-tab" data-bs-toggle="tab" data-bs-target="#todasPostagens" type="button" role="tab" aria-controls="todasPostagens" aria-selected="true">Postagens</button>
         </li>
-        <li class="nav-item text-secondary font-weight-bold" role="presentation">
+        <li (click)='findByIdUser()' class="nav-item text-secondary font-weight-bold" role="presentation">
           <button class="nav-link" id="minhasPostagens-tab" data-bs-toggle="tab" data-bs-target="#minhasPostagens" type="button" role="tab" aria-controls="minhasPostagens" aria-selected="false">Minhas postagens</button>
         </li>
         <li class="nav-item text-secondary font-weight-bold" role="presentation">
@@ -38,10 +38,47 @@
         </li>
     </ul>
 
-      <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="todasPostagens" role="tabpanel" aria-labelledby="home-tab">Postagens</div>
-        <div class="tab-pane fade" id="minhasPostagens" role="tabpanel" aria-labelledby="profile-tab">Minhas Postagens</div>
-        <div class="tab-pane fade" id="postagemTema" role="tabpanel" aria-labelledby="contact-tab">Postagens por Tema</div>
+      <div class="tab-content"  id="myTabContent">
+        <div class="tab-pane fade show active" id="todasPostagens" role="tabpanel" aria-labelledby="nav-todasPostagens-tab">
+          
+          <div class="card *ngFor='let item of listaPostagens'" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{item.titulo}}</h5>
+              <small class="text-muted">Tema:{{item.tema.descricao}}</small>
+              <h6 class="card-subtitle mb-2 text-muted">{{item.texto}}</h6>
+              <p class="card-text">By: {{item.usuario.nome}}</p>
+              
+            </div>
+          </div>
+
+
+        </div>
+
+
+        <div class="tab-pane fade" id="minhasPostagens" role="tabpanel" aria-labelledby="profile-tab">
+        
+          <div class="card *ngFor='let item of user.postagem'" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{item.titulo}}</h5>
+              <small class="text-muted">Tema:{{item.tema.descricao}}</small>
+              <h6 class="card-subtitle mb-2 text-muted">{{item.texto}}</h6>              
+            </div>
+          </div>
+        
+        </div>
+        <div class="tab-pane fade" id="postagemTema" role="tabpanel" aria-labelledby="contact-tab">
+
+          <div *ngFor='let tema of listaTemas'>
+          <div class="card *ngFor='let item of tema.postagem'" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{item.titulo}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{item.texto}}</h6>
+              <p class="card-text">By: {{item.usuario.nome}}</p>
+              
+            </div>
+          </div>
+        </div>
+        </div>
 
       </div>
 </div>
@@ -58,24 +95,24 @@
         <div class="modal-body">
             <div class="form-group">
                 <label for="titulo">Título</label>
-                <input type="text" class="form-control" id="titulo" placeholder="Digite o título">
+                <input [(ngModel)]='postagem.titulo' type="text" class="form-control" id="titulo" placeholder="Digite o título">
             </div>
 
             <div class="form-group">
                 <label for="texto">Texto</label>
-                <textarea class="form-control" name="texto" id="texto"  rows="3"></textarea>
+                <textarea [(ngModel)]='postagem.texto' class="form-control" name="texto" id="texto"  rows="3"></textarea>
             </div>
 
             <div class="form-group">
                 <label for="tema">Escolha um tema ou <a data-bs-dismiss="modal" routerLink='/tema'>cadastre um novo</a></label>
-                <select name="tema" id="tema" class="form-control">
-                    <option value="">Temas</option>
+                <select name="tema" id="tema" class="form-control" [(ngModel)]='idTema' (change)='findByIdTema()'>
+                    <option *ngFor='let item of listaTemas' value="{{item.id}}">{{item.descricao}}</option>
                 </select>
             </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-success">Publicar</button>
+          <button type="button" class="btn btn-success" (click)='publicar()' data-bs-dismiss="modal">Publicar</button>
         </div>
       </div>
     </div>
