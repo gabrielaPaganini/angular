@@ -1,22 +1,28 @@
-import { OnInit } from "@angular/core"
-import { Router } from "@angular/router"
-import { environment } from "src/environments/environment.prod"
-import { Postagem } from "../model/Postagem"
-import { Tema } from "../model/Tema"
-import { User } from "../model/User"
-import { AuthService } from "../service/auth.service"
-import { PostagemService } from "../service/postagem.service"
-import { TemaService } from "../service/tema.service"
+import { AuthService } from './../service/auth.service';
+import { User } from './../model/User';
+import { Tema } from './../model/Tema';
+import { TemaService } from './../service/tema.service';
+import { PostagemService } from './../service/postagem.service';
+import { Postagem } from './../model/Postagem';
+import { Router } from '@angular/router';
+import { environment } from './../../environments/environment.prod';
+import { Component, OnInit } from '@angular/core';
 
-
+@Component({
+  selector: 'app-inicio',
+  templateUrl: './inicio.component.html',
+  styleUrls: ['./inicio.component.css']
+})
 export class InicioComponent implements OnInit {
 
   postagem: Postagem = new Postagem()
   listaPostagens: Postagem[]
+  tituloPost: string
 
   tema: Tema = new Tema()
   listaTemas: Tema[]
   idTema: number
+  nomeTema: string
 
   user: User = new User()
   idUser = environment.id
@@ -25,10 +31,12 @@ export class InicioComponent implements OnInit {
     private router: Router,
     private postagemService: PostagemService,
     private temaService: TemaService,
-    private authService: AuthService
+    public authService: AuthService
   ) { }
 
   ngOnInit() {
+    window.scroll(0,0)
+
     if(environment.token == ''){
       alert('Sua sessão expirou. Por favor efetue o login novamente!')
       this.router.navigate(['/entrar'])
@@ -38,7 +46,7 @@ export class InicioComponent implements OnInit {
   }
 
   getAllTemas(){
-    this.temaService.getAllTema().subscribe((resp: Tema[]) =>{
+    this.temaService.getAllTema().subscribe((resp: Tema[]) => {
       this.listaTemas = resp
     })
   }
@@ -47,6 +55,7 @@ export class InicioComponent implements OnInit {
     this.temaService.getByIdTema(this.idTema).subscribe((resp: Tema) =>{
       this.tema = resp
     })
+  }
 
   getAllPostagens(){
     this.postagemService.getAllPostagens().subscribe((resp: Postagem[])=> {
@@ -59,7 +68,7 @@ export class InicioComponent implements OnInit {
       this.user = resp
     })
   }
-  }
+  
   publicar(){
     this.tema.id = this.idTema
     this.postagem.tema = this.tema
